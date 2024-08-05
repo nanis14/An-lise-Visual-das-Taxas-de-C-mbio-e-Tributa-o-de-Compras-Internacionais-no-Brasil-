@@ -1,0 +1,90 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import numpy as np
+
+# Dados das taxas de câmbio
+data = {
+    'Moeda': ['Dólar Comercial', 'Dólar Turismo', 'Euro Comercial', 'Euro Turismo'],
+    'Taxa': [5.415, 5.623, 5.856, 6.096],
+    'Variação (%)': [-1.11, -1.09, -1.2, -1.24]
+}
+
+# Dados da tributação
+purchase_data = {
+    'Valor Produto (US$)': [50, 70],
+    'Imposto de Importação (%)': [20, 22],
+    'ICMS (%)': [17, 17],
+    'Valor Final (R$)': [382.93, 535.41]
+}
+
+df_taxas = pd.DataFrame(data)
+df_tributacao = pd.DataFrame(purchase_data)
+
+# Gráfico de barras das taxas de câmbio
+plt.figure(figsize=(10, 6))
+plt.bar(df_taxas['Moeda'], df_taxas['Taxa'], color=['blue', 'orange', 'green', 'red'])
+plt.title('Taxas de Câmbio')
+plt.xlabel('Moeda')
+plt.ylabel('Taxa (R$)')
+plt.grid(True)
+plt.text(2.5, 6.2, 'Este gráfico mostra as taxas de câmbio atuais\npara diferentes moedas em relação ao Real (R$).',
+         bbox=dict(facecolor='white', alpha=0.5))
+plt.show()
+
+# Descrição do histograma 3D
+descricao_histograma = """
+Distribuição das taxas de câmbio em formato 3D, demonstrando a frequência de ocorrência
+das taxas para cada moeda em relação ao Real (R$). Este histograma oferece uma visão
+detalhada das variações nas taxas de câmbio entre as diferentes moedas.
+"""
+
+# Histograma 3D das taxas de câmbio
+fig = plt.figure(figsize=(12, 6))
+ax1 = fig.add_subplot(121, projection='3d')  # Subplot para o histograma
+ax2 = fig.add_subplot(122)  # Subplot para a descrição
+
+for i, moeda in enumerate(df_taxas['Moeda']):
+    # Gerar dados aleatórios para o histograma (simulação)
+    data = np.random.normal(df_taxas['Taxa'][i], 0.1, 1000)
+    hist, bins = np.histogram(data, bins=30)
+    xs = (bins[:-1] + bins[1:]) / 2
+
+    # Criação das barras em 3D
+    ax1.bar(xs, hist, zs=i, zdir='y', alpha=0.8, width=0.1, label=moeda)
+
+ax1.set_title('Distribuição das Taxas de Câmbio 3D')
+ax1.set_xlabel('Taxa (R$)')
+ax1.set_ylabel('Moeda')
+ax1.set_zlabel('Frequência')
+ax1.set_yticks(range(len(df_taxas['Moeda'])))
+ax1.set_yticklabels(df_taxas['Moeda'])
+
+# Adicionando texto à figura
+ax2.text(0.1, 0.9, descricao_histograma, transform=ax2.transAxes, fontsize=8,
+         bbox=dict(facecolor='white', alpha=0.5))
+ax2.axis('off')  # Desliga os eixos do subplot de descrição
+
+# Ajuste de espaçamento entre subplots
+plt.subplots_adjust(wspace=0.3)
+
+plt.show()
+
+# Gráfico de linhas da variação das taxas de câmbio
+plt.figure(figsize=(10, 6))
+plt.plot(df_taxas['Moeda'], df_taxas['Variação (%)'], marker='o', linestyle='-', color='purple')
+plt.title('Variação das Taxas de Câmbio (%)')
+plt.xlabel('Moeda')
+plt.ylabel('Variação (%)')
+plt.grid(True)
+
+# Descrição do gráfico de linhas
+descricao_linhas = """
+Este gráfico mostra a variação percentual das taxas de câmbio para cada moeda
+em relação ao Real (R$). Ele oferece uma visualização das mudanças nas taxas
+de câmbio ao longo de um período específico.
+"""
+
+plt.text(2.5, -1.1, descricao_linhas,
+         bbox=dict(facecolor='white', alpha=0.5))
+plt.show()
